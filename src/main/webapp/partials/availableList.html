@@ -1,0 +1,30 @@
+<h3>Task List</h3>
+
+<!--  div data-ng-show="userFeedback != ''" class="alert alert-danger">{{userFeedback}}</div> -->
+
+<h4>Available Tasks</h4>
+
+<table class="table table-striped">
+	<tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Created Date</th>
+		<th>Status</th>
+		<th>Actions</th>
+	</tr>
+	<tr data-ng-show="task.status=='Ready'"
+		data-ng-repeat="task in data.availableTasks">
+		<td>{{task.id}}</td>
+		<td>{{task.name}}</td>
+		<td>{{task.description}}</td>
+		<td>{{task.createdOn}}</td>
+		<td>{{task.status}}</td>
+		<td><a href=""
+			data-ng-click="claimTask(task.name, task.id)">claim</a> 
+			<a data-ng-show="task.status=='Reserved'" 
+			href=""
+			data-ng-click="startTask(task.name, task.id)">start</a>
+		</td>
+	</tr>
+</table>

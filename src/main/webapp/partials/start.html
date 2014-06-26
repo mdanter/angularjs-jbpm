@@ -1,0 +1,49 @@
+<h3>Loan Order</h3>
+
+<div data-ng-show="isNumber(responseData.process.processId)"
+	class="alert alert-success">{{userFeedback}}</div>
+
+<!-- div
+	data-ng-show="userFeedback != '' && !isNumber(responseData.process.processId)"
+	class="alert alert-danger">{{userFeedback}}</div> -->
+<form name="myForm"
+	data-ng-show="!isNumber(responseData.process.processId)">
+	<div class="form-horizontal" data-role="form">
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="firstName">First
+				Name</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="firstName"
+					placeholder="Enter First Name (required)"
+					data-ng-model="myData.loanOrder.firstName" required />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="lastName">Last
+				Name </label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="lastName"
+					placeholder="Enter Last Name (required)"
+					data-ng-model="myData.loanOrder.lastName" required />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="loanAmount">Loan
+				Amount</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="loanAmount"
+					placeholder="Loan Amount (required)"
+					data-ng-model="myData.loanOrder.loanAmount" required />
+			</div>
+		</div>
+
+
+		<input id="startProcess" data-ng-disabled="myForm.$invalid"
+			class="btn btn-default" type="submit" value="Submit" class="btn"
+			x-disabler="'Starting Process...'" data-ng-model="loading"
+			data-ng-click="startProcess()" />
+
+	</div>
+</form>

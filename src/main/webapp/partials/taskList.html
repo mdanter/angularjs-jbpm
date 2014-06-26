@@ -1,0 +1,38 @@
+<h3>Task List</h3>
+
+<!--  div data-ng-show="userFeedback != ''" class="alert alert-danger">{{userFeedback}}</div> -->
+
+<h4>Assigned Tasks</h4>
+
+<div class="checkbox">
+	<label> <input type="checkbox" id="showCompleted"
+		data-ng-model="showCompleted" /> Show Completed Tasks
+	</label>
+</div>
+
+<table class="table table-striped">
+	<tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Created Date</th>
+		<th>Status</th>
+		<th>Actions</th>
+	</tr>
+	<tr data-ng-show="task.status!='Exited'"
+		data-ng-repeat="task in data.assignedTasks | filter: filterCompleted">
+		<td>{{task.id}}</td>
+		<td>{{task.name}}</td>
+		<td>{{task.description}}</td>
+		<td>{{task.createdOn}}</td>
+		<td>{{task.status}}</td>
+		<td><a data-ng-show="task.status!='Completed'" href=""
+			data-ng-click="releaseTask(task.id)">release</a> <span
+			data-ng-show="task.status=='Completed'">Completed</span> <a
+			data-ng-show="task.status=='Reserved'" href=""
+			data-ng-click="startTask(task.name, task.id)">start</a> <a
+			data-ng-show="task.status=='InProgress'" href=""
+			data-ng-click="continueTask(task.name, task.id)">continue</a>
+			</td>
+	</tr>
+</table>

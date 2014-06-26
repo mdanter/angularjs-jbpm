@@ -1,0 +1,14 @@
+<h3>Human Task 1</h3>
+
+ <!-- <div data-ng-show="userFeedback != ''" class="alert alert-danger">{{userFeedback}}</div>-->
+<div class="form-horizontal" data-role="form">
+
+	<div class="form-group">
+		Press button to complete Task 
+	</div>
+	<input id="startProcess" data-ng-disabled="myForm.$invalid"
+		class="btn btn-default" type="submit" value="Submit" class="btn"
+		x-disabler="'Completing Task...'" data-ng-model="loading"
+		data-ng-click="completeTask()" />
+
+</div>
