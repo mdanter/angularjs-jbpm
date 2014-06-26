@@ -11,9 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * TaskSummary implementation that supports JAXB.
- * @see org.kie.api.task.model.TaskSummary
  * 
- * @author mdanter
+ * @author bradsdavis, mdanter
  *
  */
 @XmlRootElement(name="task-summary")
