@@ -1,4 +1,4 @@
-package com.redhat.jbpm.angularjs;
+package com.redhat.jbpm.angularjs.bpm;
 
 import java.io.Serializable;
 import java.util.Date;

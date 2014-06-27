@@ -1,4 +1,4 @@
-package com.redhat.jbpm.angularjs;
+package com.redhat.jbpm.angularjs.rest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,32 +17,21 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.redhat.jbpm.angularjs.bpm.MockJBPM;
+import com.redhat.jbpm.angularjs.model.LoanOrder;
+
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-@Path("/rest")
-public class RestService {
+@Path("/task")
+public class TaskService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RestService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TaskService.class);
 
 	@Inject
 	private MockJBPM mockJbpm;
 
-	@POST
-	@Path("/process/start/{processId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response startProcess(@PathParam("processId") String processId) {
-
-		Map<String, Map<String,Long>> process = new HashMap<String, Map<String,Long>>();
-		Map<String, Long> processInstanceId = new HashMap<String, Long>();
-		
-		processInstanceId.put("processId", Math.round(Math.random() * 23));
-		process.put("process", processInstanceId);
-		
-		return Response.ok(process, MediaType.APPLICATION_JSON).build();
-	}
-
 	@GET
-	@Path("/task/assigned/{user}")
+	@Path("/assigned/{user}")
 	public Response assigned(@PathParam("user") String user) {
 
 		Map<String, List> task = new HashMap<String, List>();
@@ -52,9 +40,25 @@ public class RestService {
 
 		return Response.ok(task, MediaType.APPLICATION_JSON).build();
 	}
+	
+	@GET
+	@Path("/get-data/{user}/{taskId}")
+	public Response getData(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
+
+		Map<String, LoanOrder> taskData = new HashMap<String, LoanOrder>();
+		
+		LoanOrder order = new LoanOrder();
+		order.setFirstName("Sample");
+		order.setLastName("Sample");
+		order.setLoanAmount(Math.round(Math.random()*1000*taskId));
+		
+		taskData.put("loanOrder", order);
+
+		return Response.ok(taskData, MediaType.APPLICATION_JSON).build();
+	}
 
 	@GET
-	@Path("/task/available/{user}")
+	@Path("/available/{user}")
 	public Response available(@PathParam("user") String user) {
 
 		Map<String, List> task = new HashMap<String, List>();
@@ -65,7 +69,7 @@ public class RestService {
 	}
 
 	@PUT
-	@Path("/task/claim/{user}/{taskId}")
+	@Path("/claim/{user}/{taskId}")
 	public Response claim(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.claim(user, taskId);
 
@@ -77,7 +81,7 @@ public class RestService {
 	}
 
 	@PUT
-	@Path("/task/start/{user}/{taskId}")
+	@Path("/start/{user}/{taskId}")
 	public Response start(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.start(user, taskId);
 
@@ -89,7 +93,7 @@ public class RestService {
 	}
 
 	@PUT
-	@Path("/task/complete/{user}/{taskId}")
+	@Path("/complete/{user}/{taskId}")
 	public Response complete(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.complete(user, taskId);
 
@@ -101,7 +105,7 @@ public class RestService {
 	}
 
 	@PUT
-	@Path("/task/release/{user}/{taskId}")
+	@Path("/release/{user}/{taskId}")
 	public Response release(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.release(user, taskId);
 

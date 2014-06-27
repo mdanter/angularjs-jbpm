@@ -48,7 +48,7 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 
 } ])
 
-.controller('TaskListCtrl', [ '$scope', '$location', '$http', function($scope, $location, $http) {
+.controller('AssignedTasksCtrl', [ '$scope', '$location', '$http', function($scope, $location, $http) {
 
 	$scope.showCompleted = '';
 	$scope.completedFilter = '';
@@ -117,7 +117,7 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 		$location.path('/' + taskName + '/' + taskId);
 	};
 
-} ]).controller('AvailableListCtrl', [ '$scope', '$location', '$http', function($scope, $location, $http) {
+} ]).controller('AvailableTasksCtrl', [ '$scope', '$location', '$http', function($scope, $location, $http) {
 	$scope.init = function() {
 		return {
 			loanOrder : {
@@ -199,7 +199,7 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 		
 		$scope.myData = $scope.init();
 		// do get request for task data and populate scope myData with it
-		$http.get('/angularjs-jbpm/api/rest/task/assigned/abaxter/' + $scope.taskId).success(function(data, status, headers, config) {
+		$http.get('/angularjs-jbpm/api/rest/task/get-data/abaxter/' + $scope.taskId).success(function(data, status, headers, config) {
 			console.log(data);
 			$scope.myData = data;
 
@@ -213,8 +213,9 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 		$scope.myData = $scope.init();
 
 		// do get request for task data and populate scope myData with it
-		$http.get('/angularjs-jbpm/api/rest/task/assigned/abaxter/' + $scope.taskId).success(function(data, status, headers, config) {
+		$http.get('/angularjs-jbpm/api/rest/task/get-data/abaxter/' + $scope.taskId).success(function(data, status, headers, config) {
 			console.log(data);
+			$scope.myData = data;
 			
 		}).error(function(data, status, headers, config) {
 			console.log(data);

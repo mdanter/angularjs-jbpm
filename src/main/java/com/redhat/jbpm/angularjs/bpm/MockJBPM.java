@@ -1,4 +1,4 @@
-package com.redhat.jbpm.angularjs;
+package com.redhat.jbpm.angularjs.bpm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
