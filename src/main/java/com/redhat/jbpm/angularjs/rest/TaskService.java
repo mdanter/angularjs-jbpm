@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.redhat.jbpm.angularjs.bpm.MockJBPM;
+import com.redhat.jbpm.angularjs.bpm.TaskSummary;
 import com.redhat.jbpm.angularjs.model.LoanOrder;
 
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -34,7 +35,7 @@ public class TaskService {
 	@Path("/assigned/{user}")
 	public Response assigned(@PathParam("user") String user) {
 
-		Map<String, List> task = new HashMap<String, List>();
+		Map<String, List<TaskSummary>> task = new HashMap<String, List<TaskSummary>>();
 
 		task.put("task", mockJbpm.getAssignedTasks());
 
@@ -61,7 +62,7 @@ public class TaskService {
 	@Path("/available/{user}")
 	public Response available(@PathParam("user") String user) {
 
-		Map<String, List> task = new HashMap<String, List>();
+		Map<String, List<TaskSummary>> task = new HashMap<String, List<TaskSummary>>();
 
 		task.put("task", mockJbpm.getAvailableTasks());
 
@@ -73,7 +74,7 @@ public class TaskService {
 	public Response claim(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.claim(user, taskId);
 
-		Map<String, List> task = new HashMap<String, List>();
+		Map<String, List<TaskSummary>> task = new HashMap<String, List<TaskSummary>>();
 
 		task.put("task", mockJbpm.getAssignedTasks());
 
@@ -85,7 +86,7 @@ public class TaskService {
 	public Response start(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.start(user, taskId);
 
-		Map<String, List> task = new HashMap<String, List>();
+		Map<String, List<TaskSummary>> task = new HashMap<String, List<TaskSummary>>();
 
 		task.put("task", mockJbpm.getAssignedTasks());
 
@@ -97,7 +98,7 @@ public class TaskService {
 	public Response complete(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.complete(user, taskId);
 
-		Map<String, List> task = new HashMap<String, List>();
+		Map<String, List<TaskSummary>> task = new HashMap<String, List<TaskSummary>>();
 
 		task.put("task", mockJbpm.getAssignedTasks());
 
@@ -109,7 +110,7 @@ public class TaskService {
 	public Response release(@PathParam("user") String user, @PathParam("taskId") Long taskId) {
 		mockJbpm.release(user, taskId);
 
-		Map<String, List> task = new HashMap<String, List>();
+		Map<String, List<TaskSummary>> task = new HashMap<String, List<TaskSummary>>();
 
 		task.put("task", mockJbpm.getAssignedTasks());
 
