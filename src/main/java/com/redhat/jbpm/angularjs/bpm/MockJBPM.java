@@ -3,9 +3,9 @@ package com.redhat.jbpm.angularjs.bpm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -15,8 +15,8 @@ import javax.inject.Named;
 @ApplicationScoped
 public class MockJBPM {
 
-	private Map<Long, TaskSummary> availableTasks = new HashMap<Long, TaskSummary>();
-	private Map<Long, TaskSummary> assignedTasks = new HashMap<Long, TaskSummary>();
+	private Map<Long, TaskSummary> availableTasks = new ConcurrentHashMap<Long, TaskSummary>();
+	private Map<Long, TaskSummary> assignedTasks = new ConcurrentHashMap<Long, TaskSummary>();
 
 	public MockJBPM() {
 
@@ -56,7 +56,7 @@ public class MockJBPM {
 
 	}
 
-	public List<TaskSummary> getAvailableTasks() {
+	public synchronized List<TaskSummary> getAvailableTasks() {
 
 		List<TaskSummary> tasks = new ArrayList<TaskSummary>(availableTasks.entrySet().size());
 
@@ -69,7 +69,7 @@ public class MockJBPM {
 		return tasks;
 	}
 
-	public List<TaskSummary> getAssignedTasks() {
+	public synchronized List<TaskSummary> getAssignedTasks() {
 		List<TaskSummary> tasks = new ArrayList<TaskSummary>(assignedTasks.entrySet().size());
 
 		for (Long key : assignedTasks.keySet()) {
@@ -81,7 +81,7 @@ public class MockJBPM {
 
 	}
 
-	public void claim(String user, Long id) {
+	public synchronized void claim(String user, Long id) {
 
 		TaskSummary ts = availableTasks.get(id);
 		ts.setStatus(Status.Reserved);
@@ -91,21 +91,21 @@ public class MockJBPM {
 
 	}
 
-	public void start(String user, Long id) {
+	public synchronized void start(String user, Long id) {
 
 		TaskSummary ts = assignedTasks.get(id);
 
 		ts.setStatus(Status.InProgress);
 	}
 
-	public void complete(String user, Long id) {
+	public synchronized void complete(String user, Long id) {
 
 		TaskSummary ts = assignedTasks.get(id);
 
 		ts.setStatus(Status.Completed);
 	}
 
-	public void release(String user, Long id) {
+	public synchronized void release(String user, Long id) {
 
 		TaskSummary ts = assignedTasks.get(id);
 

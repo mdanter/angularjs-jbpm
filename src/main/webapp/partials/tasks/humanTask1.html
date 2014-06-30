@@ -9,6 +9,6 @@
 	<input id="startProcess" data-ng-disabled="myForm.$invalid"
 		class="btn btn-default" type="submit" value="Submit" class="btn"
 		x-disabler="'Completing Task...'" data-ng-model="loading"
-		data-ng-click="completeTask()" />
+		data-ng-click="completeTask(taskName, taskId)" />
 
 </div>

@@ -7,7 +7,7 @@
 	data-ng-show="userFeedback != '' && !isNumber(responseData.process.processId)"
 	class="alert alert-danger">{{userFeedback}}</div>
  -->
- 
+
 <form name="myForm">
 	<div class="form-horizontal" data-role="form">
 		<div class="form-group">
@@ -44,7 +44,7 @@
 		<input id="startProcess" data-ng-disabled="myForm.$invalid"
 			class="btn btn-default" type="submit" value="Submit" class="btn"
 			x-disabler="'Completing Task...'" data-ng-model="loading"
-			data-ng-click="completeTask()" />
+			data-ng-click="completeTask(taskName, taskId)" />
 
 	</div>
 </form>

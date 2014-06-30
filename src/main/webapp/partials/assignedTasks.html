@@ -20,14 +20,14 @@
 		<th>Actions</th>
 	</tr>
 	<tr data-ng-show="task.status!='Exited'"
-		data-ng-repeat="task in data.assignedTasks | filter: filterCompleted">
+		data-ng-repeat="task in data.assignedTasks.tasks | filter: filterCompleted">
 		<td>{{task.id}}</td>
 		<td>{{task.name}}</td>
 		<td>{{task.description}}</td>
 		<td>{{task.createdOn}}</td>
 		<td>{{task.status}}</td>
 		<td><a data-ng-show="task.status!='Completed'" href=""
-			data-ng-click="releaseTask(task.id)">release</a> <span
+			data-ng-click="releaseTask(task.name, task.id)">release</a> <span
 			data-ng-show="task.status=='Completed'">Completed</span> <a
 			data-ng-show="task.status=='Reserved'" href=""
 			data-ng-click="startTask(task.name, task.id)">start</a> <a

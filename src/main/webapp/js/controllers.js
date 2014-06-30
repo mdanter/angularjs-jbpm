@@ -24,23 +24,21 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 	$scope.startProcess = function() {
 
 		$scope.loading = true;
-
-		var startProcessUrl = '/angularjs-jbpm/api/rest/process/start/loanOrder';
-		var headers = {
-			'Content-Type' : 'application/json'
+		var startProcessUrl = 'angularjs-jbpm/api/rest/process/start/loanOrder';
+		var headers={
+				'Content-Type' : 'application/json'
 		};
+		
 		console.log('Submitting request payload: ');
 		console.log($scope.myData);
-
-		$http.post(startProcessUrl, $scope.myData, headers).success(function(data, status, headers, config) {
-			console.log('Started Process Instance ID: ' + data.process.processId);
+		$http.post(startProcessUrl, $scope.myData, headers).success(function(data, status, headers, config){
+			$scope.userFeedback = 'Started Process With ID: ' + $scope.responseData;
 			$scope.responseData = data;
 			$scope.userFeedback = 'Started Process With ID: ' + $scope.responseData.process.processId;
 			$scope.myData = $scope.init();
-
-		}).error(function(data, status, headers, config) {
+		}).error(function(data, status, headers, config){
 			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
+			console.log('An error occured, please check the console logs for full information. Status code: ' + status);
 			$scope.loading = false;
 		});
 
@@ -48,7 +46,7 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 
 } ])
 
-.controller('AssignedTasksCtrl', [ '$scope', '$location', '$http', function($scope, $location, $http) {
+.controller('AssignedTasksCtrl', [ '$scope', '$location', '$http','taskFactory', function($scope, $location, $http, taskFactory) {
 
 	$scope.showCompleted = '';
 	$scope.completedFilter = '';
@@ -66,47 +64,24 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 
 	// function to load assigned and available tasks
 	$scope.loadData = function() {
-		$http.get('/angularjs-jbpm/api/rest/task/assigned/abaxter').success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.data.assignedTasks = data.task;
-
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
+		$scope.data.assignedTasks = taskFactory.getAssigned('abaxter');
 		
 	};
 
 	// loading data initially
 	$scope.loadData();
 
-	// function to claim a task
-
-
 	// function to release a task
-	$scope.releaseTask = function(taskId) {
-		console.log('Released Task with ID: ' + taskId);
-		$http.put('/angularjs-jbpm/api/rest/task/release/abaxter/' + taskId).success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.loadData();
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
+	$scope.releaseTask = function(taskName, taskId) {
+		taskFactory.release('abaxter', taskName, taskId);
+		$scope.loadData();
 	};
 
 	// function to start a task
 	$scope.startTask = function(taskName, taskId) {
-		console.log('Started ' + taskName + ' with ID: ' + taskId);
-		$http.put('/angularjs-jbpm/api/rest/task/start/abaxter/' + taskId).success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.loadData();
-			$location.path('/' + taskName + '/' + taskId);
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
-		
+		taskFactory.start('abaxter', taskName, taskId);
+		$scope.loadData();
+		$location.path('/' + taskName + '/' + taskId);
 	};
 	
 	
@@ -153,27 +128,20 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 
 	// function to claim a task
 	$scope.claimTask = function(taskName, taskId) {
-		console.log('Claimed ' + taskName + ' with ID: ' + taskId);
-		$http.put('/angularjs-jbpm/api/rest/task/claim/abaxter/' + taskId).success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.loadData();
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
-
+		taskFactory.claim('abaxter', taskName, taskId);
+		$scope.loadData();
 	};
 
-} ]).controller('TasksCtrl', [ '$scope', '$routeParams', '$location', '$http', function($scope, $routeParams, $location, $http) {
+} ]).controller('TasksCtrl', [ '$scope', '$routeParams', '$location', '$http', 'taskFactory', function($scope, $routeParams, $location, $http, taskFactory) {
 
 	$scope.userFeedback = '';
 
 	// creating the necessary parameters for the
 	// composite page here
 	$scope.taskId = $routeParams.taskId;
-	$scope.taskName = 'partials/tasks/' + $routeParams.taskName + '.html';
-
-	console.log('Loading composite.html with ' + $scope.taskName + ' and task ID: ' + $scope.taskId);
+	$scope.taskName = $routeParams.taskName;
+	$scope.taskFormPath = 'partials/tasks/' + $routeParams.taskName + '.html';
+	console.log('Loading composite.html with ' + $scope.taskFormPath + ' and task ID: ' + $scope.taskId);
 
 	$scope.loading = false;
 	
@@ -187,51 +155,24 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 		};
 	};
 
+	$scope.myData = $scope.init();
+	
 	if ($routeParams.taskName == 'humanTask1') {
 		
+		$scope.myData = taskFactory.getData('abaxter', $scope.taskName, $scope.taskId);
 		
-		$scope.myData = $scope.init();
-		// do get request for task data and populate scope myData with it
-		$http.get('/angularjs-jbpm/api/rest/task/get-data/abaxter/' + $scope.taskId).success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.myData = data;
-
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
-
 	} else if ($routeParams.taskName == 'humanTask2') {
 		
-		$scope.myData = $scope.init();
-
-		// do get request for task data and populate scope myData with it
-		$http.get('/angularjs-jbpm/api/rest/task/get-data/abaxter/' + $scope.taskId).success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.myData = data;
-			
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
+		$scope.myData = taskFactory.getData('abaxter', $scope.taskName, $scope.taskId);
 
 	}
 
 	// tie this to the submit button
-	$scope.completeTask = function() {
-		var startProcessUrl = '/angularjs-jbpm/api/rest/task/complete/abaxter/' + $scope.taskId;
-		var headers = {
-			'Content-Type' : 'application/json'
-		};
-		$scope.loading = true;
-		$http.put(startProcessUrl, $scope.myData, headers).success(function(data, status, headers, config) {
-			console.log(data);
-			$location.path('/avilableList');
-			
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.loading = false;
-		});
+	$scope.completeTask = function(taskName, taskId) {
+		
+		taskFactory.complete('abaxter', taskName, taskId);
+		$location.path('/avilableTasks');
+		
 	};
 
 } ]);
