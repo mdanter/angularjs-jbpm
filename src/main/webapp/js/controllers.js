@@ -117,7 +117,7 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 		$location.path('/' + taskName + '/' + taskId);
 	};
 
-} ]).controller('AvailableTasksCtrl', [ '$scope', '$location', '$http', function($scope, $location, $http) {
+} ]).controller('AvailableTasksCtrl', [ '$scope', '$location', '$http','taskFactory', function($scope, $location, $http, taskFactory) {
 	$scope.init = function() {
 		return {
 			loanOrder : {
@@ -145,14 +145,7 @@ angular.module('demoApp.controllers', []).controller('StartCtrl', [ '$scope', '$
 
 	// function to load assigned and available tasks
 	$scope.loadData = function() {
-		$http.get('/angularjs-jbpm/api/rest/task/available/abaxter').success(function(data, status, headers, config) {
-			console.log(data);
-			$scope.data.availableTasks = data.task;
-
-		}).error(function(data, status, headers, config) {
-			console.log(data);
-			$scope.userFeedback = 'An error occured, please check the console logs for full information. Status code: ' + status;
-		});
+		$scope.data.availableTasks = taskFactory.getAvailable('abaxter');
 	};
 
 	// loading data initially

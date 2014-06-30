@@ -14,7 +14,7 @@
 		<th>Actions</th>
 	</tr>
 	<tr data-ng-show="task.status=='Ready'"
-		data-ng-repeat="task in data.availableTasks">
+		data-ng-repeat="task in data.availableTasks.tasks">
 		<td>{{task.id}}</td>
 		<td>{{task.name}}</td>
 		<td>{{task.description}}</td>
